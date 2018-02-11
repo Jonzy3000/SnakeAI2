@@ -31,6 +31,10 @@ class Food {
     public get getFoodRect() : PIXI.Rectangle {
         return new PIXI.Rectangle(this.foodTile.x, this.foodTile.y, this.width, this.height);
     }
+
+    public destory() {
+        this.foodTile.destroy();
+    }
 }
 
 export default Food

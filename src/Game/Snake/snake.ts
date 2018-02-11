@@ -6,47 +6,35 @@ class Snake {
     private body: SnakeBodyPart[] = [];
     private direction: Direction = Direction.RIGHT();
     private bodySize: Vector = new Vector(10, 10);
-    private bodyColour: number =  0xaa33f4;
+    private bodyColour: number = 0xaa33f4;
     constructor(private stage: PIXI.Container, private mapSize: Vector) {
         this.createSnake();
     }
 
-    public get headRect() : PIXI.Rectangle {
+    public get headRect(): PIXI.Rectangle {
         const head = this.body[0];
-        return new PIXI.Rectangle(head.x, head.y, head.width, head.height);
+        return head.rect;
     }
 
     private createSnake() {
         this.newSnakeBody(new Vector(this.mapSize.X / 2, this.mapSize.Y / 2));
-        this.newSnakeBody(new Vector(0,0));
-        this.newSnakeBody(new Vector(0,0));
+        this.onEatFood();
+        this.onEatFood();
+        this.onEatFood();
 
     }
 
-    public move(velocity: number) {
-        this.moveBody();
-        this.moveHead(velocity);
-    }
-
-    private moveBody() {
-        if (this.body.length > 1) {
-            for (let i = this.body.length - 1; i > 0; i--) {
-                const oldBodyPart = this.body[i];
-                const newBodyPart = this.body[i - 1];
-
-                oldBodyPart.x = newBodyPart.x; 
-                oldBodyPart.y = newBodyPart.y; 
-            }
-        }
-    }
-
-    private moveHead(velocity: number) {
+    public move() {
         const head = this.body[0];
-        head.x += (velocity * this.direction.X);
-        head.y += (velocity * this.direction.Y);
+        const tail = this.body.pop();
+
+        tail.x = head.x + this.bodySize.X * this.direction.X;
+        tail.y = head.y + this.bodySize.Y * this.direction.Y;
+
+        this.body.unshift(tail);
     }
 
-    public setDirection(direction : Direction): void {
+    public setDirection(direction: Direction): void {
         if (this.direction.isDirectlyOpposite(direction)) {
             return;
         }
@@ -55,28 +43,46 @@ class Snake {
     }
 
     public onEatFood() {
-        this.newSnakeBody(new Vector(0,0));
+        this.newSnakeBody(new Vector(
+            this.headRect.x + this.bodySize.X * this.direction.X,
+            this.headRect.y + this.bodySize.Y * this.direction.Y
+        ));
+
     }
+
+    printDetails() {
+        for (var i = 0; i < this.body.length; i++) {
+            console.log(`${i}: ${this.body[i].x}, ${this.body[i].y}`);
+        }
+    }
+
 
     private newSnakeBody(pos: Vector) {
         const bodyPart = new SnakeBodyPart(pos);
         bodyPart.beginFill(this.bodyColour);
-        bodyPart.drawRect(0, 0, this.bodySize.X, this.bodySize.Y);
+        bodyPart.lineStyle(1, 0xe0ffe4, 1);
+        bodyPart.drawRect(0, 0, this.bodySize.X - 1, this.bodySize.Y - 1);
         bodyPart.endFill();
         this.stage.addChild(bodyPart);
-        this.body.push(bodyPart);
+        this.body.unshift(bodyPart);
     }
 
     public isOverlappingWithSelf() {
-        // const headRect = this.headRect;
-        // for (let i = 1; i < this.body.length; i++) {
-        //     const bodyPart = this.body[i];
-        //     if (HitDetection.hasRectanglesHit(headRect, bodyPart.getBounds())) {
-        //         return true;
-        //     }
-        // }
+        const headRect = this.headRect;
+        for (let i = 1; i < this.body.length; i++) {
+            const bodyPart = this.body[i];
+            if (HitDetection.hasRectanglesHit(headRect, bodyPart.rect)) {
+                return true;
+            }
+        }
 
         return false;
+    }
+
+    public destroy() {
+        this.body.forEach(e => {
+            e.destroy(true);
+        });
     }
 }
 
@@ -85,6 +91,10 @@ class SnakeBodyPart extends PIXI.Graphics {
         super();
         this.x = pos.X;
         this.y = pos.Y;
+    }
+
+    public get rect(): PIXI.Rectangle {
+        return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
     }
 }
 

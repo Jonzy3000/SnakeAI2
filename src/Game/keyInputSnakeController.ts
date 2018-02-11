@@ -7,12 +7,14 @@ class KeyInputSnakeController {
     right = new KeyInput(39);
     up = new KeyInput(38);
     down = new KeyInput(40);
+    r = new KeyInput(82);
 
-    constructor(private snake : Snake) {
+    constructor(private snake: Snake, rKeyCallBack: () => void) {
         this.left.press = () => this.snake.setDirection(Direction.LEFT());
         this.right.press = () => this.snake.setDirection(Direction.RIGHT());
         this.up.press = () => this.snake.setDirection(Direction.UP());
         this.down.press = () => this.snake.setDirection(Direction.DOWN());
+        this.r.press = () => rKeyCallBack();
     }
 }
 
