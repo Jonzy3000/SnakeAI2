@@ -17,7 +17,7 @@ class Snake {
     }
 
     private createSnake() {
-        this.newSnakeBody(new Vector(this.mapSize.X / 2, this.mapSize.Y / 2));
+        this.newSnakeBody(new Vector(0, 0));
         this.onEatFood();
         this.onEatFood();
         this.onEatFood();

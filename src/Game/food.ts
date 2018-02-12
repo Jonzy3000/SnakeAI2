@@ -12,7 +12,7 @@ class Food {
     }
 
     public spawnNewFood() {
-        const newPoint : Vector = VectorUtils.getRandomPointInRange(this.mapSize);
+        const newPoint: Vector = VectorUtils.getRandPointRounded(this.mapSize, 10);
         this.foodTile.beginFill(this.fillColour);
         this.foodTile.drawRect(0, 0, this.width, this.height);
         this.foodTile.endFill();
@@ -28,7 +28,7 @@ class Food {
         this.foodTile.clear();
     }
 
-    public get getFoodRect() : PIXI.Rectangle {
+    public get getFoodRect(): PIXI.Rectangle {
         return new PIXI.Rectangle(this.foodTile.x, this.foodTile.y, this.width, this.height);
     }
 

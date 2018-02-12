@@ -38,7 +38,7 @@ class Game {
     }
 
     private notWithinMap(head: PIXI.Rectangle) {
-        return head.x <= 0 || head.y <= 0 || head.x >= this.app.screen.width || head.y >= this.app.screen.height;
+        return head.x < 0 || head.y < 0 || head.x > this.app.screen.width || head.y > this.app.screen.height;
     }
 
     private resetGame() {
