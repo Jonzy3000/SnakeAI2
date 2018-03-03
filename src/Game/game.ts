@@ -10,7 +10,7 @@ class Game {
     private snake: Snake;
     private keyInputSnakeController: KeyInputSnakeController;
     private count = 0;
-    private score: Score = new Score();
+    private score: Score;
     private gameActive: boolean = true;
     constructor(private app: PIXI.Application) {
         this.setupGame();
@@ -22,6 +22,7 @@ class Game {
         this.setUpFood();
         this.setUpSnake();
         this.setUpKeyInputs();
+        this.setupScore();
     }
 
     private setUpFood() {
@@ -37,13 +38,18 @@ class Game {
         this.keyInputSnakeController = new KeyInputSnakeController(this.snake, this.resetGame.bind(this));
     }
 
+    private setupScore() {
+        this.score = new Score(this.app.stage);
+    }
+
     private notWithinMap(head: PIXI.Rectangle) {
-        return head.x < 0 || head.y < 0 || head.x > this.app.screen.width || head.y > this.app.screen.height;
+        return head.x < 0 || head.y < 0 || head.x >= this.app.screen.width || head.y >= this.app.screen.height;
     }
 
     private resetGame() {
         this.snake.destroy();
         this.food.destory();
+        this.score.reset();
         this.score.reset();
         this.setupGame();
         this.gameActive = true;
