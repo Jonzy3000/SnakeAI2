@@ -19,7 +19,7 @@ export default class Brain {
     }
 
     public onGameUpdate(input: GameInfo, snake: Snake) {
-        console.log(input.getDuration);
+        //console.log(input.getDuration);
 
         if (input.getGameFinished) {
             this.gameFinished = true;
@@ -62,6 +62,9 @@ export default class Brain {
                 break;
             default:
         }
+
+        console.log(neuralNetworkOutput)
+        console.log(newDirection)
         return newDirection;
     }
 
@@ -77,6 +80,8 @@ export default class Brain {
         neuralNetworkInput.push(input.getFoodLocation.y - snake.headRect.y);
         neuralNetworkInput.push(snake.getDirection.X);
         neuralNetworkInput.push(snake.getDirection.Y);
+
+        console.log(neuralNetworkInput)
 
         return neuralNetworkInput;
     }

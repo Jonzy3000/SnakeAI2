@@ -6,7 +6,7 @@ import Brain from "./brain";
 
 export default class GeneticAlgorithm {
 	private numInputs : number = 4;
-	private numHiddenLayers : number = 2;
+	private numHiddenLayers : number = 3;
 	private numNeurons : number = 4;
 	private generationCount : number = 0;
 	private fittest : number = 0;
@@ -31,7 +31,7 @@ export default class GeneticAlgorithm {
             new Game(this.app, [brain.onGameUpdate.bind(brain)]);
         }
 
-        setInterval(this.areBrainsFinished, 5000);
+        setInterval(this.areBrainsFinished, 500);
         console.log("Are brains still running: " + this.brainsFinished);
         if (this.brainsFinished) {
         	for (let i = 0; i < this.numberOfSnakes; i++) {
@@ -61,7 +61,7 @@ export default class GeneticAlgorithm {
             this.weights.push([]);
 
             for(let j = 0; j < numberOfWeights; j++){
-                this.weights[i][j]= (Math.random()*2)-1;
+                this.weights[i][j]= (Math.random()*4)-2;
             }
         }
     }
