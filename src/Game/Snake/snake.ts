@@ -7,6 +7,7 @@ class Snake {
     private direction: Direction = Direction.RIGHT();
     private bodySize: Vector = new Vector(10, 10);
     private bodyColour: number = 0xaa33f4;
+    private safeToChangeDirection: boolean = false;
     constructor(private stage: PIXI.Container, private mapSize: Vector) {
         this.createSnake();
     }
@@ -36,14 +37,21 @@ class Snake {
         tail.y = head.y + this.bodySize.Y * this.direction.Y;
 
         this.body.unshift(tail);
+
+        this.safeToChangeDirection = true;
     }
 
     public setDirection(direction: Direction): void {
-        if (this.direction.isDirectlyOpposite(direction)) {
+        if (this.direction.isDirectlyOpposite(direction) || !this.safeToChangeDirection) {
             return;
         }
 
         this.direction = direction;
+        this.safeToChangeDirection = false;
+    }
+
+    public get getDirection(): Direction {
+        return this.direction;
     }
 
     public onEatFood() {
