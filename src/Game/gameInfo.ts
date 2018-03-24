@@ -8,6 +8,7 @@ export default class GameInfo {
     private gameFinished: boolean;
     private score: number;
     private direction: Direction;
+    private duration: number;
 
     constructor(
         foodLocation: PIXI.Rectangle,
@@ -15,12 +16,14 @@ export default class GameInfo {
         gameFinished: boolean,
         score: number,
         direction: Direction,
+        duration: number
     ) {
         this.foodLocation = foodLocation;
         this.snakeBody = snakeBody;
         this.gameFinished = gameFinished;
         this.score = score;
         this.direction = direction;
+        this.duration = duration;
     }
 
     public get getSnakeBody(): PIXI.Rectangle[] {
@@ -41,5 +44,9 @@ export default class GameInfo {
 
     public get getDirection(): Direction {
         return this.direction;
+    }
+
+    public get getDuration(): number {
+        return this.duration;
     }
 }
