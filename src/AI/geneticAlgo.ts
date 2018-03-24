@@ -12,8 +12,8 @@ export default class GeneticAlgorithm {
 	private fittest : number = 0;
 	private topFiveFittest : number[][];
 	private brainsFinished : boolean;
-	private brains : Brain[];
-	private weights : number[][];
+	private brains : Brain[] = [];
+	private weights : number[][] = [];
 	private fitnessScores : number[];
 
     constructor(private app: PIXI.Application, private numberOfSnakes: number) {
@@ -35,7 +35,7 @@ export default class GeneticAlgorithm {
         console.log("Are brains still running: " + this.brainsFinished);
         if (this.brainsFinished) {
         	for (let i = 0; i < this.numberOfSnakes; i++) {
-        		brains[i].getScore()
+        		this.brains[i].fitnessScore();
         	}
         }
     }
