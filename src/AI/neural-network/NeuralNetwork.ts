@@ -1,6 +1,13 @@
 class NeuralNetwork
-{    
-    constructor(numInputs, numOutputs, numHiddenLayers, numNeuronsPerHiddenLayer) 
+{  
+	private bias:number
+	private activationResponse:number
+	private neuronLayers:NeuronLayer[]
+    constructor(
+		private numInputs:number, 
+		private numOutputs:number, 
+		private numHiddenLayers:number, 
+		private numNeuronsPerHiddenLayer:number) 
     {
 
         this.numInputs = numInputs;
@@ -43,10 +50,10 @@ class NeuralNetwork
 		}
 	}
 	
-	update(inputs)
+	update(inputs:number[])
 	{
 		
-		var outputs = [];
+		var outputs:number[] = [];
 		
 		var cWeight = 0;
 		
@@ -108,7 +115,7 @@ class NeuralNetwork
 		return outputs;
 	}
 
-	sigmoid(totalInput, activationResponse)
+	sigmoid(totalInput:number, activationResponse:number)
 	{
 		return ( 1 / ( 1 + Math.exp(-totalInput / activationResponse)));
 	}
@@ -135,7 +142,7 @@ class NeuralNetwork
 		return weights;
 	}
 	
-	setWeights(weights)
+	setWeights(weights:number[])
 	{
 		var cWeight = 0;
 		

@@ -1,6 +1,8 @@
 class Neuron
 {
-	constructor(numInputs)
+	public weights:number[]
+	constructor(
+		public numInputs:number)
 	{
         this.weights = [];
 		this.numInputs = numInputs;

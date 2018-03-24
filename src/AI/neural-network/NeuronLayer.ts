@@ -1,6 +1,9 @@
 class NeuronLayer
 {
-	constructor(numNeuronsPerHiddenLayer, numInputs)
+	public neurons:Neuron[]
+	constructor(
+		private numNeuronsPerHiddenLayer:number, 
+		private numInputs:number)
 	{
         this.neurons = [];
 
