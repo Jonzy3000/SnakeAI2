@@ -149,7 +149,6 @@ class NeuralNetwork
 		//for each layer
 		for (var i=0; i<this.numHiddenLayers + 1; ++i)
 		{
-
 			//for each neuron
 			for (var j=0; j<this.neuronLayers[i].neurons.length; ++j)
 			{
