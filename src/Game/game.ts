@@ -85,7 +85,14 @@ class Game {
     }
 
     private applyUpdateGameInfo() {
-        let gameInfo: GameInfo = new GameInfo(this.food.getFoodRect, this.snake.getBody, !this.gameActive, this.score.get);
+        let gameInfo: GameInfo = new GameInfo(
+            this.food.getFoodRect, 
+            this.snake.getBody, 
+            !this.gameActive, 
+            this.score.get, 
+            this.snake.getDirection
+        );
+        
         this.gameUpdateCallback.forEach((callback) => callback(gameInfo));
     }
 }
