@@ -1,3 +1,5 @@
+import NeuronLayer from "./NeuronLayer";
+
 class NeuralNetwork
 {  
 	private bias:number
@@ -161,3 +163,5 @@ class NeuralNetwork
 		}
 	}
 }
+
+export default NeuralNetwork

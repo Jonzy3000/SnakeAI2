@@ -1,6 +1,6 @@
-import AISetup from "./setup"
-
-import GameInfo from "./../Game/gameInfo"
+import AISetup from "./setup";
+import NeuralNetwork from "./../AI/neural-network/NeuralNetwork";
+import GameInfo from "./../Game/gameInfo";
 import Direction from "../Game/Snake/direction";
 import Snake from "../Game/Snake/snake";
 
