@@ -28,7 +28,7 @@ class Score {
 
     public reset() {
         this.score = 0;
-        this.textObj.text = this.score.toString();
+        this.textObj.destroy(true);
     }
 }
 
