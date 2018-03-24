@@ -16,6 +16,10 @@ class Snake {
         return head.rect;
     }
 
+    public get getBody(): PIXI.Rectangle[] {
+        return this.body.map<PIXI.Rectangle>((bodyPart: SnakeBodyPart) => bodyPart.rect);
+    }
+
     private createSnake() {
         this.newSnakeBody(new Vector(0, 0));
         this.onEatFood();

@@ -4,6 +4,7 @@ import Snake from "./Snake/snake";
 import KeyInputSnakeController from "./keyInputSnakeController"
 import HitDetection from "../Utils/hitDetection";
 import Score from "./score";
+import GameInfo from "./gameInfo";
 
 class Game {
     private food: Food;
@@ -12,7 +13,8 @@ class Game {
     private count = 0;
     private score: Score;
     private gameActive: boolean = true;
-    constructor(private app: PIXI.Application) {
+   
+    constructor(private app: PIXI.Application, private gameUpdateCallback: ((input: GameInfo) => void)[]) {
         this.setupGame();
         setInterval(() => this.renderLoop(), 1000 / 15);
         app.start();
@@ -68,10 +70,18 @@ class Game {
             this.score.increase();
 
         }
-
+        
+        
         if (this.snake.isOverlappingWithSelf() || this.notWithinMap(this.snake.headRect)) {
             this.gameActive = false;
         }
+
+        this.applyUpdateGameInfo();
+    }
+
+    private applyUpdateGameInfo() {
+        let gameInfo: GameInfo = new GameInfo(this.food.getFoodRect, this.snake.getBody, !this.gameActive, this.score.get);
+        this.gameUpdateCallback.forEach((callback) => callback(gameInfo));
     }
 }
 
