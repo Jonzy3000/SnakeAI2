@@ -15,6 +15,7 @@ export default class GeneticAlgorithm {
 	private weights : number[][];
     constructor(private app: PIXI.Application, private numberOfSnakes: number) {
         this.startGeneration();
+        this.generateInitialWeights(this.numInputs * this.numHiddenLayers * this.numNeurons);
     }
 
     //Instatiate the brains 
@@ -43,6 +44,11 @@ export default class GeneticAlgorithm {
 //fitness function: score squared/time
 //todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
 
-
-
+    private generateInitialWeights(numberOfWeights:number){
+        for (let i = 0; i < this.numberOfSnakes; i++) {
+            for(let j = 0; j < numberOfWeights; j++){
+                this.weights[i][j]= (Math.random()*2)-1;
+            }
+        }
+    }
 }
