@@ -16,7 +16,6 @@ class Food {
         this.foodTile.beginFill(this.fillColour);
         this.foodTile.drawRect(0, 0, this.width, this.height);
         this.foodTile.endFill();
-        this.foodTile.cacheAsBitmap = true;
 
         this.foodTile.x = newPoint.X;
         this.foodTile.y = newPoint.Y;
@@ -28,12 +27,12 @@ class Food {
         this.foodTile.clear();
     }
 
-    public get getFoodRect(): PIXI.Rectangle {
-        return new PIXI.Rectangle(this.foodTile.x, this.foodTile.y, this.width, this.height);
+    public reset() {
+        this.foodTile = new PIXI.Graphics();
     }
 
-    public destory() {
-        this.foodTile.destroy();
+    public get getFoodRect(): PIXI.Rectangle {
+        return new PIXI.Rectangle(this.foodTile.x, this.foodTile.y, this.width, this.height);
     }
 }
 

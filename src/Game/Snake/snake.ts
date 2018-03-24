@@ -21,11 +21,18 @@ class Snake {
         return this.body.map<PIXI.Rectangle>((bodyPart: SnakeBodyPart) => bodyPart.rect);
     }
 
-    private createSnake() {
+    public createSnake() {
         this.newSnakeBody(new Vector(0, 0));
         this.onEatFood();
         this.onEatFood();
         this.onEatFood();
+
+    }
+
+    public reset() {
+        this.body = [];
+        this.direction = Direction.RIGHT();
+        this.createSnake();
 
     }
 
@@ -89,12 +96,6 @@ class Snake {
         }
 
         return false;
-    }
-
-    public destroy() {
-        this.body.forEach(e => {
-            e.destroy(true);
-        });
     }
 }
 

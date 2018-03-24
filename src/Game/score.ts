@@ -5,15 +5,7 @@ class Score {
     private textObj: PIXI.Text;
 
     constructor(private stage: PIXI.Container) {
-        this.textObj = new PIXI.Text(this.score  + "", new PIXI.TextStyle(
-            {
-                fill: "white"
-            }
-        ));
-
-        this.textObj.x = 10;
-        this.textObj.y = 0;
-        this.stage.addChild(this.textObj);
+        this.reset();
     }
 
     public get get() {
@@ -28,7 +20,15 @@ class Score {
 
     public reset() {
         this.score = 0;
-        this.textObj.destroy(true);
+        this.textObj = new PIXI.Text(this.score + "", new PIXI.TextStyle(
+            {
+                fill: "white"
+            }
+        ));
+
+        this.textObj.x = 10;
+        this.textObj.y = 0;
+        this.stage.addChild(this.textObj);
     }
 }
 
