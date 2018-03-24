@@ -13,11 +13,13 @@ class Game {
     private count = 0;
     private score: Score;
     private gameActive: boolean = true;
-   
+    private fpsLimit: number = 15;
+    private lastRender: number = -Infinity;
+
     constructor(private app: PIXI.Application, private gameUpdateCallback: ((input: GameInfo) => void)[]) {
         this.setupGame();
-        setInterval(() => this.renderLoop(), 1000 / 15);
         app.start();
+        this.renderLoop(0);
     }
 
     private setupGame() {
@@ -58,10 +60,15 @@ class Game {
     }
 
 
-    private renderLoop() {
-        if (!this.gameActive) {
+    private renderLoop(now: number) {
+        requestAnimationFrame(this.renderLoop.bind(this));
+
+        if (!this.gameActive || now - this.lastRender < (1000 / this.fpsLimit) - 1) {
             return;
         }
+
+        this.lastRender = now;
+
         this.snake.move();
         if (HitDetection.hasRectanglesHit(this.snake.headRect, this.food.getFoodRect)) {
             this.food.eatFood();
@@ -70,8 +77,8 @@ class Game {
             this.score.increase();
 
         }
-        
-        
+
+
         if (this.snake.isOverlappingWithSelf() || this.notWithinMap(this.snake.headRect)) {
             this.gameActive = false;
         }
