@@ -6,7 +6,7 @@ class Entry {
     private app: PIXI.Application;
     private width: number;
     private height: number;
-    private numberOfSnakes: number = 5;
+    private numberOfSnakes: number = 1;
     constructor() {
         this.app = new PIXI.Application({ roundPixels: true });
         document.body.appendChild(this.app.view);

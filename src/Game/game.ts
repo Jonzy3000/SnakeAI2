@@ -54,7 +54,6 @@ class Game {
         this.snake.destroy();
         this.food.destory();
         this.score.reset();
-        this.score.reset();
         this.setupGame();
         this.gameActive = true;
     }
@@ -77,7 +76,6 @@ class Game {
             this.score.increase();
 
         }
-
 
         if (this.snake.isOverlappingWithSelf() || this.notWithinMap(this.snake.headRect)) {
             this.gameActive = false;
