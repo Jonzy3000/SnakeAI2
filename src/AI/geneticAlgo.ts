@@ -14,7 +14,7 @@ export default class GeneticAlgorithm {
 	private brains : Brain[];
 	private weights : number[][];
     constructor(private app: PIXI.Application, private numberOfSnakes: number) {
-    	this.startGeneration();
+        this.startGeneration();
     }
 
     //Instatiate the brains 
@@ -22,8 +22,9 @@ export default class GeneticAlgorithm {
     	
     	console.log("Generation: " + this.generationCount + " Fittest: " + this.fittest);
         for (let i = 0; i < this.numberOfSnakes; i++) {
-        	this.brains[i] = new Brain(this.numInputs, this.numHiddenLayers, this.numNeurons, this.weights[i]);
-            new Game(this.app, [this.brains[i].onGameUpdate]);
+            let brain = new Brain(this.numInputs, this.numHiddenLayers, this.numNeurons, this.weights[i]);
+            this.brains.push(brain);
+            new Game(this.app, [brain.onGameUpdate.bind(brain)]);
         }
 
         setInterval(this.areBrainsFinished, 5000);
@@ -39,12 +40,9 @@ export default class GeneticAlgorithm {
     	}
     }
 
-
-
-
-
 //fitness function: score squared/time
 //todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
+
 
 
 }
