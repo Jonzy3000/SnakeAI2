@@ -8,7 +8,7 @@ class Entry {
     private height: number;
     private numberOfSnakes: number = 1;
     constructor() {
-        this.app = new PIXI.Application({ roundPixels: true });
+        this.app = new PIXI.Application({ roundPixels: true, width:300, height:400 });
         document.body.appendChild(this.app.view);
 
         for (let i = 0; i < this.numberOfSnakes; i++) {
