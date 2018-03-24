@@ -6,10 +6,12 @@ import Snake from "../Game/Snake/snake";
 
 export default class Brain {
 
-    private neuralNetwork: NeuralNetwork
-    private gameFinished: boolean
-    private score: number
-    constructor(numInputs: number, numHiddenLayers: number, numNeuronsPerHiddenLayer: number, weights: number[]) {
+    
+    private neuralNetwork:NeuralNetwork
+    private gameFinished:boolean
+    private fitness:number
+    constructor(numInputs:number, numHiddenLayers:number, numNeuronsPerHiddenLayer:number, weights:number[]) {
+
         this.gameFinished = false;
         let numOutputs: number = 4;
         this.neuralNetwork = new NeuralNetwork(numInputs, numOutputs, numHiddenLayers, numNeuronsPerHiddenLayer);
@@ -24,7 +26,7 @@ export default class Brain {
             return;
         }
 
-        this.calculateScore(input);
+        this.fitnessFunction(input);
 
         let outputs: number[] = this.neuralNetwork.update(this.generateNeuralNetworkInput(input, snake));
 
@@ -63,8 +65,10 @@ export default class Brain {
         return newDirection;
     }
 
-    private calculateScore(input: GameInfo) {
-        this.score = (input.getScore * input.getScore / input.getDuration);
+
+    private fitnessFunction(input: GameInfo){
+        this.fitness = (input.getScore * input.getScore / input.getDuration);
+
     }
 
     private generateNeuralNetworkInput(input: GameInfo, snake: Snake) {
@@ -77,8 +81,9 @@ export default class Brain {
         return neuralNetworkInput;
     }
 
-    public getScore() {
-        return this.score;
+
+    public getFitness(){
+        return this.fitness;
     }
 
     public getIsGameFinished() {
