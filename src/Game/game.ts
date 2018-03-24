@@ -5,6 +5,7 @@ import KeyInputSnakeController from "./keyInputSnakeController"
 import HitDetection from "../Utils/hitDetection";
 import Score from "./score";
 import GameInfo from "./gameInfo";
+import Direction from "./Snake/direction";
 
 class Game {
     private food: Food;
@@ -16,7 +17,7 @@ class Game {
     private fpsLimit: number = 15;
     private lastRender: number = -Infinity;
 
-    constructor(private app: PIXI.Application, private gameUpdateCallback: ((input: GameInfo) => void)[]) {
+    constructor(private app: PIXI.Application, private gameUpdateCallback: ((input: GameInfo, snake: Snake) => void)[]) {
         this.setupGame();
         app.start();
         this.renderLoop(0);
@@ -93,7 +94,7 @@ class Game {
             this.snake.getDirection
         );
         
-        this.gameUpdateCallback.forEach((callback) => callback(gameInfo));
+        this.gameUpdateCallback.forEach((callback) => callback(gameInfo, this.snake));
     }
 }
 
