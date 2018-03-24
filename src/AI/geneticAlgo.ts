@@ -35,7 +35,7 @@ export default class GeneticAlgorithm {
         console.log("Are brains still running: " + this.brainsFinished);
         if (this.brainsFinished) {
         	for (let i = 0; i < this.numberOfSnakes; i++) {
-        		this.brains[i].fitnessScore();
+        		this.brains[i].getFitness();
         	}
         }
     }
