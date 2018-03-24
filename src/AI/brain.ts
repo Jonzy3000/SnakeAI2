@@ -5,15 +5,15 @@ import Direction from "../Game/Snake/direction";
 import Snake from "../Game/Snake/snake";
 
 export default class Brain {
-    
-    private neuralNetwork:NeuralNetwork
-    private gameFinished:boolean
-    private score:number
-    constructor(numInputs:number, numHiddenLayers:number, numNeuronsPerHiddenLayer:number, weights:number[]) {
+
+    private neuralNetwork: NeuralNetwork
+    private gameFinished: boolean
+    private score: number
+    constructor(numInputs: number, numHiddenLayers: number, numNeuronsPerHiddenLayer: number, weights: number[]) {
         this.gameFinished = false;
-        let numOutputs:number = 4;
-        this.neuralNetwork = new NeuralNetwork(numInputs,numOutputs,numHiddenLayers,numNeuronsPerHiddenLayer); 
-        this.neuralNetwork.setWeights(weights);  
+        let numOutputs: number = 4;
+        this.neuralNetwork = new NeuralNetwork(numInputs, numOutputs, numHiddenLayers, numNeuronsPerHiddenLayer);
+        this.neuralNetwork.setWeights(weights);
     }
 
     public onGameUpdate(input: GameInfo, snake: Snake) {
@@ -26,18 +26,18 @@ export default class Brain {
 
         this.calculateScore(input);
 
-        let outputs:number[] = this.neuralNetwork.update(this.generateNeuralNetworkInput(input, snake));
-        
+        let outputs: number[] = this.neuralNetwork.update(this.generateNeuralNetworkInput(input, snake));
+
         //Ideally we would just get a callback, but this is confusing in js 
         snake.setDirection(this.generateDirection(outputs));
     }
 
-    private generateDirection(neuralNetworkOutput:number[]): Direction{
+    private generateDirection(neuralNetworkOutput: number[]): Direction {
         var newDirection: Direction;
 
-        let max:number = neuralNetworkOutput[0];
-        let maxIndex:number = 0;
-    
+        let max: number = neuralNetworkOutput[0];
+        let maxIndex: number = 0;
+
         for (var i = 1; i < neuralNetworkOutput.length; i++) {
             if (neuralNetworkOutput[i] > max) {
                 maxIndex = i;
@@ -45,7 +45,7 @@ export default class Brain {
             }
         }
 
-        switch(maxIndex) {
+        switch (maxIndex) {
             case 0:
                 newDirection = Direction.DOWN();
                 break;
@@ -58,30 +58,34 @@ export default class Brain {
             case 3:
                 newDirection = Direction.RIGHT();
                 break;
-            default:        
+            default:
         }
         return newDirection;
-    } 
+    }
 
-    private calculateScore(input: GameInfo){
+    private calculateScore(input: GameInfo) {
         this.score = (input.getScore * input.getScore / input.getDuration);
     }
 
-    private generateNeuralNetworkInput(input:GameInfo, snake:Snake){
-        var neuralNetworkInput:number[]=[];
-        neuralNetworkInput.push(input.getFoodLocation.x-snake.headRect.x);
-        neuralNetworkInput.push(input.getFoodLocation.y-snake.headRect.y);
+    private generateNeuralNetworkInput(input: GameInfo, snake: Snake) {
+        var neuralNetworkInput: number[] = [];
+        neuralNetworkInput.push(input.getFoodLocation.x - snake.headRect.x);
+        neuralNetworkInput.push(input.getFoodLocation.y - snake.headRect.y);
         neuralNetworkInput.push(snake.getDirection.X);
         neuralNetworkInput.push(snake.getDirection.Y);
 
         return neuralNetworkInput;
     }
 
-    public getScore(){
+    public getScore() {
         return this.score;
     }
 
-    public getIsGameFinished(){
+    public getIsGameFinished() {
         return this.gameFinished;
+    }
+
+    public getWeights() {
+        return this.neuralNetwork.getWeights();
     }
 }
