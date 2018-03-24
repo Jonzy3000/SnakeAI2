@@ -82,7 +82,7 @@ export default class Brain {
     }
 
 
-    public fitnessScore(){
+    public getFitness(){
         return this.fitness;
     }
 
