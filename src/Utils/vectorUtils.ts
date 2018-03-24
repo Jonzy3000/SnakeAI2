@@ -16,6 +16,7 @@ class VectorUtils {
         randomY = randomY - randomY % nearest;
         return new Vector(randomX, randomY);
     }
+
 }
 
 export default VectorUtils;

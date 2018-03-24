@@ -1,3 +1,5 @@
+import Neuron from "./Neuron";
+
 class NeuronLayer
 {
 	public neurons:Neuron[]
@@ -15,3 +17,5 @@ class NeuronLayer
 		}
 	}
 }
+
+export default NeuronLayer;
