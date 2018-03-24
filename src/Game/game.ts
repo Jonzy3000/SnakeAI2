@@ -35,20 +35,31 @@ class Game {
     }
 
     private setUpFood() {
-        this.food = new Food(this.app.stage, new Vector(this.app.screen.width, this.app.screen.height));
+        if (!this.food) {
+            this.food = new Food(this.app.stage, new Vector(this.app.screen.width, this.app.screen.height));
+        }
+
         this.food.spawnNewFood();
     }
 
     private setUpSnake() {
-        this.snake = new Snake(this.app.stage, new Vector(this.app.screen.width, this.app.screen.height));
+        if (!this.snake) {
+            this.snake = new Snake(this.app.stage, new Vector(this.app.screen.width, this.app.screen.height));
+        } else {
+            this.snake.reset();
+        }
     }
 
     private setUpKeyInputs() {
-        this.keyInputSnakeController = new KeyInputSnakeController(this.snake, this.resetGame.bind(this));
+        if (!this.keyInputSnakeController) {
+            this.keyInputSnakeController = new KeyInputSnakeController(this.snake, this.resetGame.bind(this));
+        }
     }
 
     private setupScore() {
-        this.score = new Score(this.app.stage);
+        if (!this.score) {
+            this.score = new Score(this.app.stage);
+        }
     }
 
     private notWithinMap(head: PIXI.Rectangle) {
@@ -56,9 +67,13 @@ class Game {
     }
 
     private resetGame() {
-        this.snake.destroy();
-        this.food.destory();
+        this.app.stage.removeChildren().forEach(e => {
+            e.destroy();
+        });
+
         this.score.reset();
+        this.food.reset();
+
         this.setupGame();
         this.gameActive = true;
     }
@@ -72,7 +87,7 @@ class Game {
         }
 
         this.lastRender = now;
-        
+
         this.duration = Date.now() - this.startTime;
 
         this.snake.move();
@@ -91,20 +106,20 @@ class Game {
         this.applyUpdateGameInfo();
     }
 
-    private get getDuration() : number {
+    private get getDuration(): number {
         return this.duration;
-    } 
+    }
 
     private applyUpdateGameInfo() {
         let gameInfo: GameInfo = new GameInfo(
-            this.food.getFoodRect, 
-            this.snake.getBody, 
-            !this.gameActive, 
-            this.score.get, 
+            this.food.getFoodRect,
+            this.snake.getBody,
+            !this.gameActive,
+            this.score.get,
             this.snake.getDirection,
             this.getDuration
         );
-        
+
         this.gameUpdateCallback.forEach((callback) => callback(gameInfo, this.snake));
     }
 }
