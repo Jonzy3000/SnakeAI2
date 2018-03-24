@@ -14,6 +14,9 @@ export default class Brain {
             return;
         }
 
+        console.log(input.getDuration);
+
+        //Ideally we would just get a callback, but this is confusing in js 
         snake.setDirection(Direction.randomDirection());
     }
 }

@@ -16,6 +16,9 @@ class Game {
     private gameActive: boolean = true;
     private fpsLimit: number = 15;
     private lastRender: number = -Infinity;
+    private startTime: number;
+    private duration: number;
+
 
     constructor(private app: PIXI.Application, private gameUpdateCallback: ((input: GameInfo, snake: Snake) => void)[]) {
         this.setupGame();
@@ -24,6 +27,7 @@ class Game {
     }
 
     private setupGame() {
+        this.startTime = Date.now();
         this.setUpFood();
         this.setUpSnake();
         this.setUpKeyInputs();
@@ -68,6 +72,8 @@ class Game {
         }
 
         this.lastRender = now;
+        
+        this.duration = Date.now() - this.startTime;
 
         this.snake.move();
         if (HitDetection.hasRectanglesHit(this.snake.headRect, this.food.getFoodRect)) {
@@ -85,13 +91,18 @@ class Game {
         this.applyUpdateGameInfo();
     }
 
+    private get getDuration() : number {
+        return this.duration;
+    } 
+
     private applyUpdateGameInfo() {
         let gameInfo: GameInfo = new GameInfo(
             this.food.getFoodRect, 
             this.snake.getBody, 
             !this.gameActive, 
             this.score.get, 
-            this.snake.getDirection
+            this.snake.getDirection,
+            this.getDuration
         );
         
         this.gameUpdateCallback.forEach((callback) => callback(gameInfo, this.snake));
