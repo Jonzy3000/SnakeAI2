@@ -14,7 +14,7 @@ export default class GeneticAlgorithm {
 	private brains : Brain[] = [];
 	private weights : number[][] = [];
     constructor(private app: PIXI.Application, private numberOfSnakes: number) {
-        this.generateInitialWeights(this.numInputs * this.numHiddenLayers * this.numNeurons);
+        this.generateInitialWeights(this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons);
         this.startGeneration();
     }
 
