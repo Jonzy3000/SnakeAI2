@@ -63,14 +63,17 @@ class Brain {
             default:
         }
 
-        console.log(neuralNetworkOutput)
-        console.log(newDirection)
         return newDirection;
     }
 
 
     private fitnessFunction(input: GameInfo){
-        this.fitness = (input.getScore * input.getScore / input.getDuration);
+        this.fitness = (input.getScore * input.getScore / (input.getDuration + 1));
+        if (isNaN(this.fitness)) {
+            console.log("input: " + input.getScore + "\nduration: " + input.getDuration + "\nfitness: " + this.fitness);
+        }
+        
+
 
     }
 
@@ -81,7 +84,6 @@ class Brain {
         neuralNetworkInput.push(snake.getDirection.X);
         neuralNetworkInput.push(snake.getDirection.Y);
 
-        console.log(neuralNetworkInput)
 
         return neuralNetworkInput;
     }
