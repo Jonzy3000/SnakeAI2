@@ -16,7 +16,7 @@ export default class GeneticAlgorithm {
 	private brains : Brain[] = [];
 	private weights : number[][] = [];
 	private fitnessScores : number[];
-	private numBrainsForSelection : number = 5;
+	private numBrainsForSelection : number = this.numberOfSnakes/2;
 	private mutationRate : number = 0.1;
 	private crossover : number;
 	private games: Game[] = [];
@@ -25,7 +25,7 @@ export default class GeneticAlgorithm {
 		let numberOfWeights: number = this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons;
 		let weightValueRange: number = 4;
 		let weightValueOffset: number = -2
-		this.generateInitialWeights(numberOfWeights, weightValueRange, weightValueOffset);
+		this.generateWeights(numberOfWeights, weightValueRange, weightValueOffset);
 		this.startGeneration();
 		this.ifFinishedEvolve();
 	}
@@ -59,7 +59,7 @@ export default class GeneticAlgorithm {
 		if (this.areBrainsFinished()) {
 			// BrainWriter.write(this.getResults(), this.generationCount);
 			this.performSelection();
-
+            
 			this.startGeneration();
 		}
 
@@ -94,7 +94,15 @@ export default class GeneticAlgorithm {
     
     	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, this.numBrainsForSelection);
     	
-        this.performSwapCrossover(selectedPopulation);
+        selectedPopulation = this.performSwapCrossover(selectedPopulation);
+        
+        //Gross but it should work
+        this.weights = []
+        this.generateWeights(selectedPopulation[0].weights.length,4,-2);
+        this.weights = this.weights.slice(0,this.numberOfSnakes/2)
+        for(let i = 0; i<selectedPopulation.length;i++){
+            this.weights.push(selectedPopulation[i].weights);     
+        }
         
     	//performcrossover(sortedResults, Math.random(weights[0].length));
 
@@ -129,6 +137,7 @@ export default class GeneticAlgorithm {
                                         + (selectedPopulation[i].weights[j] * lowerRankWeight)
             }   
         }
+        return selectedPopulation;
     }
 
     public performMutation(offspring:Brain.Result) {
@@ -143,8 +152,7 @@ export default class GeneticAlgorithm {
 //fitness function: score squared/time
 //todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
 
-    private generateInitialWeights(numberOfWeights:number, range:number, offset:number){
-        this.weights = [];
+    private generateWeights(numberOfWeights:number, range:number, offset:number){
         for (let i = 0; i < this.numberOfSnakes; i++) {
             this.weights[i] = [];
 
