@@ -16,9 +16,13 @@ export default class GeneticAlgorithm {
 	private weights : number[][] = [];
 	private fitnessScores : number[];
 	private numBrainsForSelection : number = 5;
+	private crossover : number;
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
-		this.generateInitialWeights(this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons);
+        let numberOfWeights:number = this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons;
+        let weightValueRange:number = 4;
+        let weightValueOffset:number = -2
+		this.generateInitialWeights(numberOfWeights, weightValueRange, weightValueOffset);
 		this.startGeneration();
 	}
 
@@ -60,22 +64,33 @@ export default class GeneticAlgorithm {
     	}    	
 
     	let sortedResults: Brain.Result[] = results.sort((result1, result2) => result1.fitness - result2.fitness);
-    	
-    	console.log(sortedResults);
+    
+    	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, this.numBrainsForSelection);
+    	this.crossover = Math.round(Math.random() * (this.weights[0].length - 1));
+    	this.performCrossover(selectedPopulation, this.crossover);
+    	//performcrossover(sortedResults, Math.random(weights[0].length));
+
+    }
+
+    public performCrossover(selectedPopulation:Brain.Result[], crossover:number) {
+    	console.log(selectedPopulation);
+    	for (let i = 0; i < this.crossover; i++) {
+
+    	}
+
     }
 
 //fitness function: score squared/time
 //todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
 
-private generateInitialWeights(numberOfWeights:number){
-	this.weights = [];
-	for (let i = 0; i < this.numberOfSnakes; i++) {
-		this.weights[i] = [];
+    private generateInitialWeights(numberOfWeights:number, range:number, offset:number){
+        this.weights = [];
+        for (let i = 0; i < this.numberOfSnakes; i++) {
+            this.weights[i] = [];
 
-
-		for(let j = 0; j < numberOfWeights; j++){
-			this.weights[i][j]= (Math.random()*4)-2;
-		}
-	}
-}
+            for(let j = 0; j < numberOfWeights; j++){
+                this.weights[i][j]= (Math.random()*range)+offset;
+            }
+        }
+    }
 }
