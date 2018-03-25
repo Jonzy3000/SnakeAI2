@@ -71,10 +71,20 @@ export default class GeneticAlgorithm {
 
     public performCrossover(selectedPopulation:Brain.Result[], crossover:number) {
     	console.log(selectedPopulation);
-    	for (let i = 0; i < this.crossover; i++) {
+    	for (let i = 0; i < this.numberOfSnakes; i++) {
+    		for (let i = 0; i < this.crossover; i++) {
 
+    		}
     	}
+    	let fittestParent : Brain.Result = selectedPopulation[0];
+    	let secondFittestParent : Brain.Result = selectedPopulation[1];
 
+    	//Swap values among parents (two most successful parents)
+        for (let i = 0; i < this.crossover; i++) {
+            let temp : number = fittestParent.weights[i];
+            fittestParent.weights[i] = secondFittestParent.weights[i];
+            secondFittestParent.weights[i] = temp;
+        }
     }
 
 //fitness function: score squared/time
