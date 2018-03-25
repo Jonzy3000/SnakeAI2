@@ -16,6 +16,7 @@ export default class GeneticAlgorithm {
 	private weights : number[][] = [];
 	private fitnessScores : number[];
 	private numBrainsForSelection : number = 5;
+	private mutationRate : number = 0.1;
 	private crossover : number;
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
@@ -73,12 +74,6 @@ export default class GeneticAlgorithm {
     }
 
     public performCrossover(selectedPopulation:Brain.Result[], crossover:number) {
-    	console.log(selectedPopulation);
-    	for (let i = 0; i < this.numberOfSnakes; i++) {
-    		for (let i = 0; i < this.crossover; i++) {
-
-    		}
-    	}
     	let fittestParent : Brain.Result = selectedPopulation[0];
     	let secondFittestParent : Brain.Result = selectedPopulation[1];
 
@@ -88,6 +83,15 @@ export default class GeneticAlgorithm {
             fittestParent.weights[i] = secondFittestParent.weights[i];
             secondFittestParent.weights[i] = temp;
         }
+    }
+
+    public performMutation(offspring:Brain.Result) {
+    	let numWeights = offspring.weights.length;
+    	let numMutations = Math.floor(numWeights*this.mutationRate);
+    	let mutationArray : number[] = [];
+    	for (let i = 0; i < numMutations; i++) {
+    		mutationArray[i] = Math.round(Math.random() * (numWeights-1));
+    	}
     }
 
 //fitness function: score squared/time
