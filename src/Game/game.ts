@@ -14,7 +14,7 @@ class Game {
     private count = 0;
     private score: Score;
     private gameActive: boolean = true;
-    private fpsLimit: number = 15;
+    private fpsLimit: number = 60;
     private lastRender: number = -Infinity;
     private startTime: number;
     private duration: number;
