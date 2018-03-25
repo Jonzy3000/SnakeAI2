@@ -4,7 +4,7 @@ import GameInfo from "./../Game/gameInfo";
 import Direction from "../Game/Snake/direction";
 import Snake from "../Game/Snake/snake";
 
-export default class Brain {
+class Brain {
 
     
     private neuralNetwork:NeuralNetwork
@@ -93,4 +93,22 @@ export default class Brain {
     public getWeights() {
         return this.neuralNetwork.getWeights();
     }
+
+    public getResults() {
+        let result = new Brain.Result(this.getFitness(), this.getWeights());
+        return result;
+    }
 }
+
+module Brain {
+    export class Result {
+        fitness: number;
+        weights: number[];
+        constructor(fitness : number, weights : number[]) {
+            this.fitness = fitness;
+            this.weights = weights;
+        }
+    }
+}
+
+export default Brain
