@@ -7,7 +7,7 @@ class Entry {
     private app: PIXI.Application;
     private width: number;
     private height: number;
-    private numberOfSnakes: number = 1;
+    private numberOfSnakes: number = 500;
     private geneticAlgorithm: GeneticAlgorithm;
     constructor() {
         this.app = new PIXI.Application({ roundPixels: true, width:300, height:400 });

@@ -66,11 +66,11 @@ class Game {
         return head.x < 0 || head.y < 0 || head.x >= this.app.screen.width || head.y >= this.app.screen.height;
     }
 
-    private resetGame() {
-        this.app.stage.removeChildren().forEach(e => {
-            e.destroy();
-        });
+    public setCallBack(gameUpdateCallback: ((input: GameInfo, snake: Snake) => void)[]) {
+        this.gameUpdateCallback = gameUpdateCallback;
+    }
 
+    public resetGame() {
         this.score.reset();
         this.food.reset();
 
