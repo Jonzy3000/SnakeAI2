@@ -5,18 +5,19 @@ import Game from "./../Game/game";
 import Brain from "./brain";
 
 export default class GeneticAlgorithm {
-	private numInputs: number = 4;
-	private numHiddenLayers: number = 3;
-	private numNeurons: number = 4;
-	private generationCount: number = 0;
-	private fittest: number = 0;
-	private fittestBrainsForSelection: number[][];
-	private brains: Brain[] = [];
-	private games: Game[] = [];
-	private weights: number[][] = [];
-	private fitnessScores: number[];
-	private numBrainsForSelection: number = 5;
-	private crossover: number;
+	private numInputs : number = 4;
+	private numHiddenLayers : number = 3;
+	private numNeurons : number = 4;
+	private generationCount : number = 0;
+	private fittest : number = 0;
+	private fittestBrainsForSelection : number[][];
+	private brainsFinished : boolean = true;
+	private brains : Brain[] = [];
+	private weights : number[][] = [];
+	private fitnessScores : number[];
+	private numBrainsForSelection : number = 5;
+	private mutationRate : number = 0.1;
+	private crossover : number;
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
 		let numberOfWeights: number = this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons;
@@ -72,49 +73,72 @@ export default class GeneticAlgorithm {
 	}
 
 	public performSelection() {
-		let results: Brain.Result[] = [];
-		for (let i = 0; i < this.numberOfSnakes; i++) {
-			results.push(this.brains[i].getResults());
-		}
+    	let results : Brain.Result[] = [];
+    	for (let i = 0; i < this.numberOfSnakes; i++) {
+    		results.push(this.brains[i].getResults());
+    	}    	
 
-		let sortedResults: Brain.Result[] = results.sort((result1, result2) => result1.fitness - result2.fitness);
+    	let sortedResults: Brain.Result[] = results.sort((result1, result2) => result1.fitness - result2.fitness);
+    
+    	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, this.numBrainsForSelection);
+    	
+        this.performSwapCrossover(selectedPopulation);
+        
+    	//performcrossover(sortedResults, Math.random(weights[0].length));
 
-		let selectedPopulation: Brain.Result[] = sortedResults.slice(0, this.numBrainsForSelection);
-		this.crossover = Math.round(Math.random() * (this.weights[0].length - 1));
-		this.performCrossover(selectedPopulation, this.crossover);
-		//performcrossover(sortedResults, Math.random(weights[0].length));
+    }
 
-	}
+    public performSwapCrossover(selectedPopulation:Brain.Result[]) {
+        console.log(selectedPopulation);
 
-	public performCrossover(selectedPopulation: Brain.Result[], crossover: number) {
-		console.log(selectedPopulation);
-		for (let i = 0; i < this.numberOfSnakes; i++) {
-			for (let i = 0; i < this.crossover; i++) {
+        for(let i=1;i<selectedPopulation.length;i+=2){
+            let crossover:number = Math.round(Math.random() * (this.weights[i].length - 1));
+            for(let j=0; j<crossover; j++){
+                let temp : number = selectedPopulation[i].weights[j];
+                selectedPopulation[i].weights[j] = selectedPopulation[i-1].weights[j];
+                selectedPopulation[i-1].weights[j] = temp;
+            }
+        }
+        return selectedPopulation;
+    }
 
-			}
-		}
-		let fittestParent: Brain.Result = selectedPopulation[0];
-		let secondFittestParent: Brain.Result = selectedPopulation[1];
+    //This function was created as a crossover possibility.
+    public performAdjustCrossover(selectedPopulation:Brain.Result[], crossover:number) {
+        console.log(selectedPopulation);
 
-		//Swap values among parents (two most successful parents)
-		// for (let i = 0; i < this.crossover; i++) {
-		// 	let temp: number = fittestParent.weights[i];
-		// 	fittestParent.weights[i] = secondFittestParent.weights[i];
-		// 	secondFittestParent.weights[i] = temp;
-		// }
-	}
+        var higherRankWeight:number = 0.6;
+        var lowerRankWeight:number = 0.4;
 
-	//fitness function: score squared/time
-	//todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
+        var newPopulation:number[][] = [];
+        for(let i=1; i<selectedPopulation.length;i++){
+            newPopulation[i-1] = [];
+            for(let j=0;j<selectedPopulation[i].weights.length;j++){
+                newPopulation[i-1][j] = (selectedPopulation[i-1].weights[j] * higherRankWeight)
+                                        + (selectedPopulation[i].weights[j] * lowerRankWeight)
+            }   
+        }
+    }
 
-	private generateInitialWeights(numberOfWeights: number, range: number, offset: number) {
-		this.weights = [];
-		for (let i = 0; i < this.numberOfSnakes; i++) {
-			this.weights[i] = [];
+    public performMutation(offspring:Brain.Result) {
+    	let numWeights = offspring.weights.length;
+    	let numMutations = Math.floor(numWeights*this.mutationRate);
+    	let mutationArray : number[] = [];
+    	for (let i = 0; i < numMutations; i++) {
+    		mutationArray[i] = Math.round(Math.random() * (numWeights-1));
+    	}
+    }
 
-			for (let j = 0; j < numberOfWeights; j++) {
-				this.weights[i][j] = (Math.random() * range) + offset;
-			}
-		}
-	}
+//fitness function: score squared/time
+//todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
+
+    private generateInitialWeights(numberOfWeights:number, range:number, offset:number){
+        this.weights = [];
+        for (let i = 0; i < this.numberOfSnakes; i++) {
+            this.weights[i] = [];
+
+            for(let j = 0; j < numberOfWeights; j++){
+                this.weights[i][j]= (Math.random()*range)+offset;
+            }
+        }
+    }
 }
