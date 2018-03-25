@@ -92,7 +92,7 @@ export default class GeneticAlgorithm {
 
     	let sortedResults: Brain.Result[] = results.sort((result1, result2) => result1.fitness - result2.fitness);
     
-    	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, this.numBrainsForSelection);
+    	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, Math.round(this.numberOfSnakes / 2));
     	
         selectedPopulation = this.performSwapCrossover(selectedPopulation);
         
