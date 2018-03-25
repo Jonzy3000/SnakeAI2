@@ -19,7 +19,10 @@ export default class GeneticAlgorithm {
 	private crossover : number;
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
-		this.generateInitialWeights(this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons);
+        let numberOfWeights:number = this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons;
+        let weightValueRange:number = 4;
+        let weightValueOffset:number = -2
+		this.generateInitialWeights(numberOfWeights, weightValueRange, weightValueOffset);
 		this.startGeneration();
 	}
 
@@ -90,15 +93,14 @@ export default class GeneticAlgorithm {
 //fitness function: score squared/time
 //todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
 
-private generateInitialWeights(numberOfWeights:number){
-	this.weights = [];
-	for (let i = 0; i < this.numberOfSnakes; i++) {
-		this.weights[i] = [];
+    private generateInitialWeights(numberOfWeights:number, range:number, offset:number){
+        this.weights = [];
+        for (let i = 0; i < this.numberOfSnakes; i++) {
+            this.weights[i] = [];
 
-
-		for(let j = 0; j < numberOfWeights; j++){
-			this.weights[i][j]= (Math.random()*4)-2;
-		}
-	}
-}
+            for(let j = 0; j < numberOfWeights; j++){
+                this.weights[i][j]= (Math.random()*range)+offset;
+            }
+        }
+    }
 }
