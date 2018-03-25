@@ -6,21 +6,22 @@ import Brain from "./brain";
 
 export default class GeneticAlgorithm {
 	private numInputs : number = 4;
-	private numHiddenLayers : number = 2;
+	private numHiddenLayers : number = 3;
 	private numNeurons : number = 4;
 	private generationCount : number = 0;
 	private fittest : number = 0;
 	private fittestBrainsForSelection : number[][];
 	private brainsFinished : boolean = true;
 	private brains : Brain[] = [];
-	private weights : number[][];
+	private weights : number[][] = [];
 	private fitnessScores : number[];
 	private numBrainsForSelection : number = 5;
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
-		this.generateInitialWeights(this.numInputs * this.numHiddenLayers * this.numNeurons);
+		this.generateInitialWeights(this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons);
 		this.startGeneration();
 	}
+
 
     //Instatiate the brains 
     public startGeneration() {
@@ -66,8 +67,9 @@ private generateInitialWeights(numberOfWeights:number){
 	for (let i = 0; i < this.numberOfSnakes; i++) {
 		this.weights[i] = [];
 
+
 		for(let j = 0; j < numberOfWeights; j++){
-			this.weights[i][j]= (Math.random()*2)-1;
+			this.weights[i][j]= (Math.random()*4)-2;
 		}
 	}
 }
