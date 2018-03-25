@@ -3,6 +3,7 @@ import AISetup from "./setup"
 import GameInfo from "./../Game/gameInfo";
 import Game from "./../Game/game";
 import Brain from "./brain";
+import BrainWriter from "./brainsWriter";
 
 export default class GeneticAlgorithm {
 	private numInputs : number = 4;
@@ -56,11 +57,17 @@ export default class GeneticAlgorithm {
 
 	public ifFinishedEvolve() {
 		if (this.areBrainsFinished()) {
+			// BrainWriter.write(this.getResults(), this.generationCount);
 			this.performSelection();
+
 			this.startGeneration();
 		}
 
 		setTimeout(this.ifFinishedEvolve.bind(this), 1000);
+	}
+
+	private getResults() : Brain.Result[] {
+		return this.brains.map(brain => brain.getResults());
 	}
 
 	public areBrainsFinished() {
