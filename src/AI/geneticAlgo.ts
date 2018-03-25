@@ -67,15 +67,14 @@ export default class GeneticAlgorithm {
 //fitness function: score squared/time
 //todo: Every 5 seconds: are you all finished? I.e. we need some way of checking if all done.
 
-private generateInitialWeights(numberOfWeights:number){
-	this.weights = [];
-	for (let i = 0; i < this.numberOfSnakes; i++) {
-		this.weights[i] = [];
+    private generateInitialWeights(numberOfWeights:number){
+        this.weights = [];
+        for (let i = 0; i < this.numberOfSnakes; i++) {
+            this.weights[i] = [];
 
-
-		for(let j = 0; j < numberOfWeights; j++){
-			this.weights[i][j]= (Math.random()*4)-2;
-		}
-	}
-}
+            for(let j = 0; j < numberOfWeights; j++){
+                this.weights[i][j]= (Math.random()*4)-2;
+            }
+        }
+    }
 }
