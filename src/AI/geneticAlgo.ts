@@ -36,6 +36,8 @@ export default class GeneticAlgorithm {
     	//This doesn't work as expected.
     	setInterval(this.areBrainsFinished, 5000);
     	console.log("Are brains still running: " + this.brainsFinished);
+
+    	//When all games are finished
     	this.performSelection();
     	// if (this.brainsFinished) {
     	// 	this.performSelection();
@@ -53,10 +55,13 @@ export default class GeneticAlgorithm {
 
     public performSelection() {
     	let results : Brain.Result[] = [];
-    	for (let i = 0; i < this.numBrainsForSelection; i++) {
+    	for (let i = 0; i < this.numberOfSnakes; i++) {
     		results.push(this.brains[i].getResults());
-    	}
-    	console.log(results);
+    	}    	
+
+    	let sortedResults: Brain.Result[] = results.sort((result1, result2) => result1.fitness - result2.fitness);
+    	
+    	console.log(sortedResults);
     }
 
 //fitness function: score squared/time
