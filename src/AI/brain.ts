@@ -3,14 +3,15 @@ import NeuralNetwork from "./../AI/neural-network/NeuralNetwork";
 import GameInfo from "./../Game/gameInfo";
 import Direction from "../Game/Snake/direction";
 import Snake from "../Game/Snake/snake";
+import Vector from "../Utils/vector";
 
 class Brain {
 
-    
-    private neuralNetwork:NeuralNetwork
-    private gameFinished:boolean
-    private fitness:number
-    constructor(numInputs:number, numHiddenLayers:number, numNeuronsPerHiddenLayer:number, weights:number[]) {
+
+    private neuralNetwork: NeuralNetwork
+    private gameFinished: boolean
+    private fitness: number
+    constructor(numInputs: number, numHiddenLayers: number, numNeuronsPerHiddenLayer: number, weights: number[]) {
 
         this.gameFinished = false;
         let numOutputs: number = 4;
@@ -67,20 +68,31 @@ class Brain {
     }
 
 
-    private fitnessFunction(input: GameInfo){
+    private fitnessFunction(input: GameInfo) {
         this.fitness = (input.getScore * input.getScore / (input.getDuration + 1));
-        if (isNaN(this.fitness)) {
-            console.log("input: " + input.getScore + "\nduration: " + input.getDuration + "\nfitness: " + this.fitness);
-        }
-        
+    }
 
+    private sign(x: number): number {
+        return (+(x > 0) - +(x < 0)) || +x;
+    }
 
+    private normaliseDistance(vec1: Vector, vec2: Vector): Vector {
+        const x = this.sign(vec1.X - vec2.X);
+        const y = this.sign(vec1.Y - vec2.Y);
+        return new Vector(x, y);
     }
 
     private generateNeuralNetworkInput(input: GameInfo, snake: Snake) {
         var neuralNetworkInput: number[] = [];
-        neuralNetworkInput.push(input.getFoodLocation.x - snake.headRect.x);
-        neuralNetworkInput.push(input.getFoodLocation.y - snake.headRect.y);
+
+
+        let normaliseDistances: Vector = this.normaliseDistance(
+            new Vector(input.getFoodLocation.x, input.getFoodLocation.y),
+            new Vector(snake.headRect.x, snake.headRect.y)
+        );
+
+        neuralNetworkInput.push(normaliseDistances.X);
+        neuralNetworkInput.push(normaliseDistances.Y);
         neuralNetworkInput.push(snake.getDirection.X);
         neuralNetworkInput.push(snake.getDirection.Y);
 
@@ -89,7 +101,7 @@ class Brain {
     }
 
 
-    public getFitness(){
+    public getFitness() {
         return this.fitness;
     }
 
@@ -111,7 +123,7 @@ module Brain {
     export class Result {
         fitness: number;
         weights: number[];
-        constructor(fitness : number, weights : number[]) {
+        constructor(fitness: number, weights: number[]) {
             this.fitness = fitness;
             this.weights = weights;
         }
