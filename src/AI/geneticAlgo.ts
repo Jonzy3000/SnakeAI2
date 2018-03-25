@@ -18,6 +18,7 @@ export default class GeneticAlgorithm {
 	private numBrainsForSelection : number = 5;
 	private mutationRate : number = 0.1;
 	private crossover : number;
+	private games: Game[] = [];
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
 		let numberOfWeights: number = this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons;
