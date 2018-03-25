@@ -10,7 +10,7 @@ export default class GeneticAlgorithm {
 	private numHiddenLayers : number = 3;
 	private numNeurons : number = 4;
 	private generationCount : number = 0;
-	private fittest : number = 0;
+	private fittest : Brain.Result = new Brain.Result(-1 , []);
 	private fittestBrainsForSelection : number[][];
 	private brainsFinished : boolean = true;
 	private brains : Brain[] = [];
@@ -39,7 +39,7 @@ export default class GeneticAlgorithm {
 		});
 
 		this.brains = [];
-		console.log("Generation: " + this.generationCount++ + " Fittest: " + this.fittest);
+		console.log("Generation: " + this.generationCount++ + " Fittest: " + this.fittest.fitness);
 		for (let i = 0; i < this.numberOfSnakes; i++) {
 			let brain = new Brain(this.numInputs, this.numHiddenLayers, this.numNeurons, this.weights[i]);
 
@@ -83,7 +83,11 @@ export default class GeneticAlgorithm {
 	public performSelection() {
     	let results : Brain.Result[] = [];
     	for (let i = 0; i < this.numberOfSnakes; i++) {
-    		results.push(this.brains[i].getResults());
+			results.push(this.brains[i].getResults());
+			
+			if (this.brains[i].getResults().fitness > this.fittest.fitness) {
+				this.fittest = this.brains[i].getResults();
+			}
     	}    	
 
     	let sortedResults: Brain.Result[] = results.sort((result1, result2) => result1.fitness - result2.fitness);
