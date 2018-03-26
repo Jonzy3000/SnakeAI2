@@ -18,9 +18,10 @@ export default class GeneticAlgorithm {
 	private newGenerationWeights : number[][] = [];
 	private fitnessScores : number[];
 	private numBrainsForSelection : number = this.numberOfSnakes/2;
-	private weightMutationRate : number = 0.1;
+	private weightMutationRate : number = 0.2;
 	private offspringMutationRate : number = 0.2;
 	private evolveBool = true;
+	private mutationDebug = false;
 	private crossover : number;
 	private numberOfWeights : number;
 	private weightValueRange : number;
@@ -175,7 +176,9 @@ export default class GeneticAlgorithm {
     		weightMutationArray[i] = Math.round(Math.random() * (this.numberOfWeights - 1));
     		//weightMutationArray[0] = 0;
     	}
-
+    	if (this.mutationDebug) {
+    		console.log(selectedPopulation);
+    	}
     	for (let i = 0; i < numOffspringMutations; i++) {
     		//offspringMutationArray[i] = 0;
     		offspringMutationArray[i] = Math.round(Math.random() * (this.numBrainsForSelection - 1));
@@ -184,9 +187,13 @@ export default class GeneticAlgorithm {
     		//offspringPopulation.push(offspring);
     	
     	}
+    	if (this.mutationDebug) {
+    	console.log("Num offspring mutations: " + numOffspringMutations + "\nOffspring array: " +  offspringMutationArray);
+    	console.log("Num weight mutations: " + numWeightMutations + "\nWeight mutation array:" + weightMutationArray );
+    	console.log(selectedPopulation);
 
-    	//console.log("Num offspring mutations: " + numOffspringMutations + "\nOffspring array: " +  offspringMutationArray);
-    	//console.log("Num weight mutations: " + numWeightMutations + "\nWeight mutation array:" + weightMutationArray );
+    	}
+
 
     	//offspring = this.mutateOffspring(selectedPopulation[0], weightMutationArray, numWeightMutations);
 
@@ -200,9 +207,13 @@ export default class GeneticAlgorithm {
 
     public mutateOffspring(offspring : Brain.Result, weightMutationArray:number[], numWeightMutations:number) {
     	for (let i = 0; i < numWeightMutations; i++) {
-    		//console.log("Old Weight index: " + weightMutationArray[i] + " Old weight value: " +  offspring.weights[weightMutationArray[i]] + "\n");
+    		if (this.mutationDebug) {
+    			console.log("Old Weight index: " + weightMutationArray[i] + " Old weight value: " +  offspring.weights[weightMutationArray[i]] + "\n");
+    		}
     		offspring.weights[weightMutationArray[i]] = (Math.random() * 4) + -2;
-    		//console.log("New Weight: " + offspring.weights[weightMutationArray[i]]);
+    		if (this.mutationDebug) {
+    			console.log("New Weight: " + offspring.weights[weightMutationArray[i]]);
+    		}
     	}
     	return offspring;
 
