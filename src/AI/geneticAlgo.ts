@@ -20,12 +20,12 @@ export default class GeneticAlgorithm {
 	private numBrainsForSelection : number = this.numberOfSnakes/2;
 	private weightMutationRate : number = 0.1;
 	private offspringMutationRate : number = 0.2;
-	private evolveBool = false;
+	private evolveBool = true;
 	private crossover : number;
 	private numberOfWeights : number;
 	private weightValueRange : number;
 	private weightValueOffset : number;
-	private games:Game[] = []
+	private games:Game[] = [];
 
 	constructor(private app: PIXI.Application, private numberOfSnakes: number) {
         let numberOfWeights:number = this.numInputs * (this.numHiddenLayers + 1) * this.numNeurons;
@@ -75,8 +75,11 @@ export default class GeneticAlgorithm {
 		if (this.areBrainsFinished()) {
 			// BrainWriter.write(this.getResults(), this.generationCount);
 			this.performSelection();
+
 			this.startGeneration();
 		}
+
+		setTimeout(this.ifFinishedEvolve.bind(this), 1000);
 	}
 
 	private getResults() : Brain.Result[] {
@@ -86,11 +89,9 @@ export default class GeneticAlgorithm {
 	public areBrainsFinished() {
 		for (let i = 0; i < this.numberOfSnakes; i++) {
 			if (!this.brains[i].getIsGameFinished()) {
-				console.log("BRAIN " + i + " is finished :)");
 				return false;
 			}
 		}
-
 		return true;
 	}
 
@@ -117,7 +118,6 @@ export default class GeneticAlgorithm {
     	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, Math.round(this.numberOfSnakes / 2));
     	
       	selectedPopulation = this.performSwapCrossover(selectedPopulation);
-        console.log(selectedPopulation);
         
         //Gross but it should work
         this.weights = []
@@ -126,15 +126,13 @@ export default class GeneticAlgorithm {
         for(let i = 0; i<selectedPopulation.length;i++){
             this.weights.push(selectedPopulation[i].weights);     
         }
-        console.log(this.weights);
+
         
     	//performcrossover(sortedResults, Math.random(weights[0].length));
 
     }
 
     public performSwapCrossover(selectedPopulation:Brain.Result[]) {
-        console.log(selectedPopulation);
-
         for(let i=1;i<selectedPopulation.length;i+=2){
             let crossover:number = Math.round(Math.random() * (this.weights[i].length - 1));
             for(let j=0; j<crossover; j++){
@@ -150,8 +148,6 @@ export default class GeneticAlgorithm {
 
     //This function was created as a crossover possibility.
     public performAdjustCrossover(selectedPopulation:Brain.Result[], crossover:number) {
-        console.log(selectedPopulation);
-
         var higherRankWeight:number = 0.6;
         var lowerRankWeight:number = 0.4;
 
@@ -182,17 +178,15 @@ export default class GeneticAlgorithm {
 
     	for (let i = 0; i < numOffspringMutations; i++) {
     		//offspringMutationArray[i] = 0;
-    		offspringMutationArray[i] = Math.round(Math.random() * (this.numBrainsForSelection));
-    		console.log(selectedPopulation[offspringMutationArray[i]]);
+    		offspringMutationArray[i] = Math.round(Math.random() * (this.numBrainsForSelection - 1));
     		//offspring = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
     		selectedPopulation[offspringMutationArray[i]] = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
-    		console.log(selectedPopulation[offspringMutationArray[i]]);
     		//offspringPopulation.push(offspring);
     	
     	}
 
-    	console.log("Num offspring mutations: " + numOffspringMutations + "\nOffspring array: " +  offspringMutationArray);
-    	console.log("Num weight mutations: " + numWeightMutations + "\nWeight mutation array:" + weightMutationArray );
+    	//console.log("Num offspring mutations: " + numOffspringMutations + "\nOffspring array: " +  offspringMutationArray);
+    	//console.log("Num weight mutations: " + numWeightMutations + "\nWeight mutation array:" + weightMutationArray );
 
     	//offspring = this.mutateOffspring(selectedPopulation[0], weightMutationArray, numWeightMutations);
 
@@ -207,9 +201,8 @@ export default class GeneticAlgorithm {
     public mutateOffspring(offspring : Brain.Result, weightMutationArray:number[], numWeightMutations:number) {
     	for (let i = 0; i < numWeightMutations; i++) {
     		//console.log("Old Weight index: " + weightMutationArray[i] + " Old weight value: " +  offspring.weights[weightMutationArray[i]] + "\n");
-    		console.log("Old Weight index: " + weightMutationArray[i] + " Old weight value: " +  offspring.weights[weightMutationArray[i]] + "\n");
     		offspring.weights[weightMutationArray[i]] = (Math.random() * 4) + -2;
-    		console.log("New Weight: " + offspring.weights[weightMutationArray[i]]);
+    		//console.log("New Weight: " + offspring.weights[weightMutationArray[i]]);
     	}
     	return offspring;
 
