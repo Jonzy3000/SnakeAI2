@@ -19,6 +19,7 @@ export default class GeneticAlgorithm {
 	private numBrainsForSelection : number = this.numberOfSnakes/2;
 	private weightMutationRate : number = 0.1;
 	private offspringMutationRate : number = 0.2;
+	private evolveBool = false;
 	private crossover : number;
 	private numberOfWeights : number;
 	private weightValueRange : number;
@@ -35,7 +36,13 @@ export default class GeneticAlgorithm {
 		this.weightValueOffset = weightValueOffset;
 
 		this.startGeneration();
-		this.ifFinishedEvolve();
+		if (this.evolveBool) {
+			this.ifFinishedEvolve();
+		}
+		else {
+			this.performSelection();
+			this.startGeneration();
+		}
 	}
 
 
@@ -67,7 +74,6 @@ export default class GeneticAlgorithm {
 		if (this.areBrainsFinished()) {
 			// BrainWriter.write(this.getResults(), this.generationCount);
 			this.performSelection();
-            
 			this.startGeneration();
 		}
 	}
@@ -100,7 +106,8 @@ export default class GeneticAlgorithm {
     
     	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, Math.round(this.numberOfSnakes / 2));
     	
-        selectedPopulation = this.performSwapCrossover(selectedPopulation);
+        let offspringPopulation:Brain.Result[] = this.performSwapCrossover(selectedPopulation);
+        console.log(offspringPopulation);
         
         //Gross but it should work
         this.weights = []
@@ -125,7 +132,9 @@ export default class GeneticAlgorithm {
                 selectedPopulation[i-1].weights[j] = temp;
             }
         }
-        return selectedPopulation;
+
+        let offspringPopulation : Brain.Result[] = this.performMutation(selectedPopulation);
+        return offspringPopulation;
     }
 
     //This function was created as a crossover possibility.
@@ -146,54 +155,51 @@ export default class GeneticAlgorithm {
         return selectedPopulation;
     }
 
-    public performMutation(selectedPopulation:Brain.Result[]) {
-    	let numWeights = selectedPopulation[0].weights.length;
-    	//let numOffspringMutations = Math.floor(selectedPopulation.length * this.offspringMutationRate);
-    	let numOffspringMutations = 1;
-    	let numWeightMutations = Math.floor(numWeights*this.weightMutationRate);
+    public performMutation(selectedPopulation : Brain.Result[]) {
     	let weightMutationArray : number[] = [];
     	let offspringMutationArray : number[] = [];
-
-    	console.log("numWeights: " + numWeights);
+    	let offspring : Brain.Result;
+    	let offspringPopulation : Brain.Result[] = [];
+    	let numOffspringMutations = this.offspringMutationRate*this.numBrainsForSelection;
+    	//let numWeightMutations = 1;
+    	let numWeightMutations = Math.floor(this.numberOfWeights*this.weightMutationRate);
 
     	for (let i = 0; i < numWeightMutations; i++) {
-    		weightMutationArray[i] = Math.round(Math.random() * (numWeights - 1));
+    		weightMutationArray[i] = Math.round(Math.random() * (this.numberOfWeights - 1));
+    		//weightMutationArray[0] = 0;
     	}
 
     	for (let i = 0; i < numOffspringMutations; i++) {
-    		offspringMutationArray[i] = 0;
-    		//offspringMutationArray[i] = Math.round(Math.random() * (selectedPopulation.length - 1));
+    		//offspringMutationArray[i] = 0;
+    		offspringMutationArray[i] = Math.round(Math.random() * (this.numBrainsForSelection));
+    		console.log(selectedPopulation[offspringMutationArray[i]]);
+    		offspring = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
+    		offspringPopulation.push(offspring);
+    	
     	}
 
-    	for (let i = 0; i < numOffspringMutations; i++) {
-    		console.log("before mutation: ");
-    		//console.log(selectedPopulation[offspringMutationArray[i]]);
-    		console.log(selectedPopulation[0]);
-    		//selectedPopulation[offspringMutationArray[i]] = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
-    		selectedPopulation[0] = this.mutateOffspring(selectedPopulation[0], weightMutationArray, numWeightMutations);
-    		console.log("after mutation: ");
-    		//console.log(selectedPopulation[offspringMutationArray[i]]);
-    		console.log(selectedPopulation[0]);
-    	}
-
-
-    	console.log("Num weight mutations: " + numWeightMutations + "\nWeight mutation array:" + weightMutationArray );
     	console.log("Num offspring mutations: " + numOffspringMutations + "\nOffspring array: " +  offspringMutationArray);
+    	console.log("Num weight mutations: " + numWeightMutations + "\nWeight mutation array:" + weightMutationArray );
 
-    	//console.log(selectedPopulation);
+    	//offspring = this.mutateOffspring(selectedPopulation[0], weightMutationArray, numWeightMutations);
+
+    	//offspringPopulation.push(offspring);
+
+    	return offspringPopulation;
+    	
+
 
     }
 
-    public mutateOffspring(offspring:Brain.Result, weightMutationArray:number[], numWeightMutations:number) {
+    public mutateOffspring(offspring : Brain.Result, weightMutationArray:number[], numWeightMutations:number) {
     	for (let i = 0; i < numWeightMutations; i++) {
     		//console.log("Old Weight index: " + weightMutationArray[i] + " Old weight value: " +  offspring.weights[weightMutationArray[i]] + "\n");
     		console.log("Old Weight index: " + weightMutationArray[i] + " Old weight value: " +  offspring.weights[weightMutationArray[i]] + "\n");
     		offspring.weights[weightMutationArray[i]] = (Math.random() * 4) + -2;
     		console.log("New Weight: " + offspring.weights[weightMutationArray[i]]);
     	}
-
     	return offspring;
-    	
+
     }
 
 //fitness function: score squared/time
