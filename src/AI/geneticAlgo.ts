@@ -15,6 +15,7 @@ export default class GeneticAlgorithm {
 	private brainsFinished : boolean = true;
 	private brains : Brain[] = [];
 	private weights : number[][] = [];
+	private newGenerationWeights : number[][] = [];
 	private fitnessScores : number[];
 	private numBrainsForSelection : number = this.numberOfSnakes/2;
 	private weightMutationRate : number = 0.1;
@@ -85,6 +86,7 @@ export default class GeneticAlgorithm {
 	public areBrainsFinished() {
 		for (let i = 0; i < this.numberOfSnakes; i++) {
 			if (!this.brains[i].getIsGameFinished()) {
+				console.log("BRAIN " + i + " is finished :)");
 				return false;
 			}
 		}
@@ -92,6 +94,14 @@ export default class GeneticAlgorithm {
 		return true;
 	}
 
+	/*
+	Take the 20 initial snakes.
+	Use only the top 10 performing snakes to have offspring (swap crossover)
+	Perform small mutation on a couple of the offspring to prevent premature convergence.
+	Randomly generate 10 new offspring
+	Push the 10 top performing snakes to this pool of new offspring
+	Start next generation
+	*/
 	public performSelection() {
     	let results : Brain.Result[] = [];
     	for (let i = 0; i < this.numberOfSnakes; i++) {
@@ -106,8 +116,8 @@ export default class GeneticAlgorithm {
     
     	let selectedPopulation:Brain.Result[] = sortedResults.slice(0, Math.round(this.numberOfSnakes / 2));
     	
-        let offspringPopulation:Brain.Result[] = this.performSwapCrossover(selectedPopulation);
-        console.log(offspringPopulation);
+      	selectedPopulation = this.performSwapCrossover(selectedPopulation);
+        console.log(selectedPopulation);
         
         //Gross but it should work
         this.weights = []
@@ -116,6 +126,7 @@ export default class GeneticAlgorithm {
         for(let i = 0; i<selectedPopulation.length;i++){
             this.weights.push(selectedPopulation[i].weights);     
         }
+        console.log(this.weights);
         
     	//performcrossover(sortedResults, Math.random(weights[0].length));
 
@@ -173,8 +184,10 @@ export default class GeneticAlgorithm {
     		//offspringMutationArray[i] = 0;
     		offspringMutationArray[i] = Math.round(Math.random() * (this.numBrainsForSelection));
     		console.log(selectedPopulation[offspringMutationArray[i]]);
-    		offspring = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
-    		offspringPopulation.push(offspring);
+    		//offspring = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
+    		selectedPopulation[offspringMutationArray[i]] = this.mutateOffspring(selectedPopulation[offspringMutationArray[i]], weightMutationArray, numWeightMutations);
+    		console.log(selectedPopulation[offspringMutationArray[i]]);
+    		//offspringPopulation.push(offspring);
     	
     	}
 
@@ -185,7 +198,7 @@ export default class GeneticAlgorithm {
 
     	//offspringPopulation.push(offspring);
 
-    	return offspringPopulation;
+    	return selectedPopulation;
     	
 
 
@@ -213,5 +226,5 @@ export default class GeneticAlgorithm {
                 this.weights[i][j]= (Math.random()*range)+offset;
             }
         }
-    }
+    }    
 }
