@@ -70,6 +70,7 @@ export default class GeneticAlgorithm {
             
 			this.startGeneration();
 		}
+	}
 
 	private getResults() : Brain.Result[] {
 		return this.brains.map(brain => brain.getResults());
