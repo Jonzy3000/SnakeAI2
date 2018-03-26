@@ -14,7 +14,7 @@ class Game {
     private count = 0;
     private score: Score;
     private gameActive: boolean = true;
-    private fpsLimit: number = 15;
+    private fpsLimit: number = 60;
     private lastRender: number = -Infinity;
     private startTime: number;
     private duration: number;
@@ -66,11 +66,11 @@ class Game {
         return head.x < 0 || head.y < 0 || head.x >= this.app.screen.width || head.y >= this.app.screen.height;
     }
 
-    private resetGame() {
-        this.app.stage.removeChildren().forEach(e => {
-            e.destroy();
-        });
+    public setCallBack(gameUpdateCallback: ((input: GameInfo, snake: Snake) => void)[]) {
+        this.gameUpdateCallback = gameUpdateCallback;
+    }
 
+    public resetGame() {
         this.score.reset();
         this.food.reset();
 

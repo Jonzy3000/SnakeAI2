@@ -22,12 +22,12 @@ class Brain {
     public onGameUpdate(input: GameInfo, snake: Snake) {
         //console.log(input.getDuration);
 
+        this.fitnessFunction(input);
+
         if (input.getGameFinished) {
             this.gameFinished = true;
             return;
         }
-
-        this.fitnessFunction(input);
 
         let outputs: number[] = this.neuralNetwork.update(this.generateNeuralNetworkInput(input, snake));
 
